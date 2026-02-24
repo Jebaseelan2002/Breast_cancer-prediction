@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Breast Cancer Prediction</title>
+<script>
+document.querySelector("form").addEventListener("submit", function() {
+    document.getElementById("loader").style.display = "block";
+});
+</script>
+<style>
+
+/* ---------- BODY ---------- */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: pink;
+    background-image: url("https://static.vecteezy.com/system/resources/previews/021/426/159/large_2x/pink-ribbon-of-breast-cancer-awareness-illustration-vector.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    text-align: center;
+    margin: 0;
+}
+
+/* Dark overlay for readability */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 182, 193, 0.6);
+    z-index: -1;
+}
+
+/* ---------- CONTAINER ---------- */
+.container {
+    width: 450px;
+    padding: 30px;
+    border-radius: 15px;
+
+    /* glassmorphism effect */
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(8px);
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+
+    position: absolute;
+    top: 50%;
+    right: 80px;
+    transform: translateY(-50%);
+
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* ---------- TITLE ---------- */
+h2 {
+    color: #d63384;
+    margin-bottom: 15px;
+}
+
+/* ---------- INPUTS ---------- */
+input {
+    width: 92%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: 0.3s;
+    font-size: 14px;
+}
+
+/* input focus animation */
+input:focus {
+    border-color: #d63384;
+    box-shadow: 0 0 8px rgba(214, 51, 132, 0.4);
+    transform: scale(1.02);
+}
+
+/* ---------- BUTTON ---------- */
+button {
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #ff4da6, #d63384);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+/* hover effect */
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* ---------- RESULT BOX ---------- */
+h3, h4 {
+    background: #ffe6f0;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 15px;
+    color: #b30059;
+}
+
+/* ---------- FLOATING RIBBONS ---------- */
+
+.ribbon {
+    position: fixed;
+    width: 60px;
+    opacity: 0.7;
+    animation: floatUp linear infinite;
+    pointer-events: none; /* prevents blocking clicks */
+}
+
+/* different speeds & positions */
+.ribbon:nth-child(1) {
+    left: 10%;
+    animation-duration: 12s;
+}
+
+.ribbon:nth-child(2) {
+    left: 40%;
+    animation-duration: 16s;
+    width: 50px;
+}
+
+.ribbon:nth-child(3) {
+    left: 70%;
+    animation-duration: 14s;
+}
+
+.ribbon:nth-child(4) {
+    left: 85%;
+    animation-duration: 18s;
+    width: 45px;
+}
+.loader {
+    margin: 20px auto;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #d63384;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/* floating animation */
+@keyframes floatUp {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    20% {
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-120vh) rotate(360deg);
+        opacity: 0;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+<!-- 🎀 Floating Ribbons -->
+<img src="https://cdn-icons-png.flaticon.com/512/2913/2913465.png" class="ribbon">
+<img src="https://cdn-icons-png.flaticon.com/512/2913/2913465.png" class="ribbon">
+<img src="https://cdn-icons-png.flaticon.com/512/2913/2913465.png" class="ribbon">
+<img src="https://cdn-icons-png.flaticon.com/512/2913/2913465.png" class="ribbon">
+<div class="container">
+
+<h2>🩺 Breast Cancer Prediction</h2>
+
+<form action="/predict" method="post">
+
+<input type="number" step="any" name="worst_radius" placeholder="Worst Radius" required>
+
+<input type="number" step="any" name="worst_perimeter" placeholder="Worst Perimeter" required>
+
+<input type="number" step="any" name="worst_area" placeholder="Worst Area" required>
+
+<input type="number" step="any" name="worst_concave_points" placeholder="Worst Concave Points" required>
+
+<input type="number" step="any" name="mean_concave_points" placeholder="Mean Concave Points" required>
+
+<br>
+<button type="submit">Predict</button>
+
+</form>
+<div id="loader" class="loader" style="display:none;"></div>
+{% if prediction_text %}
+    <h3>Result: {{ prediction_text }}</h3>
+    <h4>Confidence: {{ confidence }}%</h4>
+{% endif %}
+
+</div>
+
+</body>
+</html>
